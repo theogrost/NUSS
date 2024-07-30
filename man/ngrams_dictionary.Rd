@@ -2,7 +2,7 @@
 % Please edit documentation in R/ngrams_dictionary.R
 \name{ngrams_dictionary}
 \alias{ngrams_dictionary}
-\title{Create ngrams dictionary}
+\title{Create n-grams dictionary}
 \usage{
 ngrams_dictionary(
   texts,
@@ -13,11 +13,11 @@ ngrams_dictionary(
 )
 }
 \arguments{
-\item{texts}{character vector, these are the texts used to create ngrams
+\item{texts}{character vector, these are the texts used to create n-grams
 dictionary. Case-sensitive.}
 
 \item{clean}{logical, indicating if the texts should be cleaned before
-creating ngrams dictionary.}
+creating n-grams dictionary.}
 
 \item{ngram_min}{numeric, sets the minimum number of words in creating
 the dictionary.}

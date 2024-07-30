@@ -1,12 +1,12 @@
-#' Create ngrams dictionary
+#' Create n-grams dictionary
 #'
 #' \code{ngrams_dictionary} returns the data.frame containing dictionary for
 #' \link{ngrams_segmentation}.
 #'
-#' @param texts character vector, these are the texts used to create ngrams
+#' @param texts character vector, these are the texts used to create n-grams
 #' dictionary. Case-sensitive.
 #' @param clean logical, indicating if the texts should be cleaned before
-#' creating ngrams dictionary.
+#' creating n-grams dictionary.
 #' @param ngram_min numeric, sets the minimum number of words in creating
 #' the dictionary.
 #' @param ngram_max numeric, sets the maximum number of words in creating

@@ -2,7 +2,7 @@
 % Please edit documentation in R/nuss.R
 \name{nuss}
 \alias{nuss}
-\title{Mixed N-grams and Unigram Sequence Segmentation (NUSS) function}
+\title{Mixed N-Grams and Unigram Sequence Segmentation (NUSS) function}
 \usage{
 nuss(sequences, texts)
 }
@@ -10,8 +10,8 @@ nuss(sequences, texts)
 \item{sequences}{character vector, sequence to be segmented,
 (e.g., hashtag) or without it. Case-insensitive.}
 
-\item{texts}{character vector, these are the texts used to create ngrams
-dictionary. Case-insensitive.}
+\item{texts}{character vector, these are the texts used to create n-grams
+and unigram dictionary. Case-insensitive.}
 }
 \value{
 The output always will be data.frame with sequences, that were

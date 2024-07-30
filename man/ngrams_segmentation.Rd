@@ -63,7 +63,7 @@ text. \cr
 'id' should be column of type numeric, containing id of unigram.\cr
 'points' should be column of type numeric, containing number of points
 for the word - the higher, the better. Unigrams with 0 points might be
-removed from the wordcount with omit_zero argument. ngrams_dictionary
+removed from the word count with omit_zero argument. ngrams_dictionary
 might be created with \link{ngrams_dictionary}.
 }
 
@@ -74,7 +74,7 @@ Two arguments are possible for simplification:\cr
 \item simplify - removes spaces between numbers and removes underscores,\cr
 \item omit_zero - removes ids of 0-pointed unigrams,
 and omits them in the word count.\cr
-By deafult segmented sequence will be simplified,
+By default segmented sequence will be simplified,
 and numbers and underscores will be removed from word count
 for score computing, since they are neutral as they are necessary.
 }

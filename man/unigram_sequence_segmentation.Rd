@@ -53,7 +53,7 @@ score calculated as
 text based on unigram sequence segmentation approach.
 }
 \details{
-This function is not intendend for long strings segmentation -
+This function is not intended for long strings segmentation -
 70 characters should be considered too long
 and may take hours to complete. 15 characters takes about 0.02s,
 30 characters about 0.03s.
@@ -70,7 +70,7 @@ text. \cr
 'id' should be column of type numeric, containing id of unigram.\cr
 'points' should be column of type numeric, containing number of points
 for the word - the higher, the better. Unigrams with 0 points might be
-removed from the wordcount with omit_zero argument.
+removed from the word count with omit_zero argument.
 }
 
 \section{Simplification}{
@@ -80,7 +80,7 @@ Two arguments are possible for simplification:\cr
 \item simplify - removes spaces between numbers and removes underscores,\cr
 \item omit_zero - removes ids of 0-pointed unigrams,
 and omits them in the word count.\cr
-By deafult segmented sequence will be simplified,
+By default segmented sequence will be simplified,
 and numbers and underscores will be removed from word count
 for score computing, since they are neutral as they are necessary.
 }

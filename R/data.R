@@ -10,7 +10,7 @@
 #'
 #' @keywords datasets
 #'
-#' @references Created with inspiration from Kevin Atkinson (2020) (\href{http://wordlist.aspell.net}{SCOWL and Friends})
+#' @references Created based on Wikipedia unigrams.
 #'
 #' @examples
 #' data(base_dictionary)

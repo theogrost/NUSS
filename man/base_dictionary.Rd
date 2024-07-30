@@ -17,6 +17,6 @@ Data contains English unigrams, with their replacements, points and ids.
 data(base_dictionary)
 }
 \references{
-Created with inspiration from Kevin Atkinson (2020) (\href{http://wordlist.aspell.net}{SCOWL and Friends})
+Created based on Wikipedia unigrams.
 }
 \keyword{datasets}

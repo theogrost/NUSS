@@ -56,20 +56,3 @@ remove_emojis <- function(texts) {
   texts <- gsub('\\p{So}|\\p{Cn}', '', texts, perl=T)
   return(texts)
 }
-
-re_uppercase <- function(lower, upper, ignore = c(" ", "-", "_")) {
-  lower_split <- strsplit(lower, "", fixed = TRUE)
-  upper_split <- strsplit(upper, "", fixed = TRUE)
-  result <- sapply(seq_along(lower), function(i){
-    cu_lo <- lower_split[[i]]
-    cu_hi <- upper_split[[i]]
-    cu_up <- grepl("[[:upper:]]", cu_hi[!cu_hi %in% ignore], perl = TRUE)
-    if(any(cu_up) & !is.na(lower[i])) {
-      cu_lo[!cu_lo%in%ignore][cu_up] <- toupper(cu_lo[!cu_lo%in%ignore][cu_up])
-      return(paste0(cu_lo, collapse = ""))
-    } else {
-      return(lower[i])
-    }
-  })
-  return(result)
-}
