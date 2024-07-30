@@ -2,7 +2,7 @@
 % Please edit documentation in R/unigram_sequence_segmentation.R
 \name{unigram_sequence_segmentation}
 \alias{unigram_sequence_segmentation}
-\title{Segmenting hashtag with unigrams.}
+\title{Segmenting sequences with unigrams}
 \usage{
 unigram_sequence_segmentation(
   sequences,
@@ -14,14 +14,15 @@ unigram_sequence_segmentation(
 )
 }
 \arguments{
-\item{sequences}{character vector, sequence to be segmented, either with '#' (e.g., hashtag)
-or without it.}
+\item{sequences}{character vector, sequence to be segmented
+(e.g., hashtag). Case-sensitive.}
 
-\item{dictionary}{data.frame, containing ids, words to search, words to use for segmentation, and their points. See details.}
+\item{dictionary}{data.frame, containing ids, words to search, words to use
+for segmentation, and their points. See details.}
 
-\item{retrieve}{character vector of length 1, the type of the result data.frame to be returned:
-'all', 'first-shortest', 'most-pointed' or 'most-scored'.
-See value section.}
+\item{retrieve}{character vector of length 1, the type of the result
+data.frame to be returned: 'all', 'first-shortest', 'most-pointed' or
+'most-scored'. See value section.}
 
 \item{simplify}{logical, if adjacent numbers should be merged into one,
 and underscores removed. See simplification section.}
@@ -35,29 +36,29 @@ to calculate score.}
 \value{
 The output always will be data.frame. If \code{retrieve='all'}
 is used, then the return will include all possible segmentation
-of the given hashtag.\cr
+of the given sequence.\cr
 If \code{retrieve='first-shortest'} is used, the first of the shortest
 segmentations (with respect to the order of word's appearance
 in the dictionary, 1 row).\cr
 If \code{retrieve='most-pointed'} is used, segmentation with most total
 points is returned (1 row).\cr
-If \code{retrieve='most-scored'} is used, segmentation with the highest score
-calculated as
-\cr \eqn{score = points / words.number ^ 2}
+If \code{retrieve='most-scored'} is used, segmentation with the highest
+score calculated as
+\cr \eqn{score = points / words.number ^ 2} (or as specified by the user).
+\cr \strong{The output is not in the input order. If needed, use
+\link[base]{lapply}}
 }
 \description{
-\code{unigram_sequence_segmentation} returns the data.frame containing hashtag,
-its segmented version, ids of dictionary words,
-number of words it have taken to segment the hashtag,
-total number of points, and computed score.
+\code{unigram_sequence_segmentation} segments input sequence into possible segmented
+text based on unigram sequence segmentation approach.
 }
 \details{
 This function is not intendend for long strings segmentation -
-140 characters should be considered too long
+70 characters should be considered too long
 and may take hours to complete. 15 characters takes about 0.02s,
 30 characters about 0.03s.
 }
-\section{Dictionary}{
+\section{unigram_dictionary}{
 
 Dictionary has to be data.frame with four named columns: 1) to_search,
 2) to_replace, 3) id, 4) points.\cr
@@ -79,16 +80,25 @@ Two arguments are possible for simplification:\cr
 \item simplify - removes spaces between numbers and removes underscores,\cr
 \item omit_zero - removes ids of 0-pointed unigrams,
 and omits them in the word count.\cr
-By deafult segmented hashtag will be simplified,
+By deafult segmented sequence will be simplified,
 and numbers and underscores will be removed from word count
 for score computing, since they are neutral as they are necessary.
 }
 }
 
 \examples{
-  unigram_sequence_segmentation('#thisisscience')
-  unigram_sequence_segmentation('#this_is_science')
-  unigram_sequence_segmentation('#thisisscience2020')
-  unigram_sequence_segmentation('#thisisscience2020', simplify=FALSE, omit_zero=FALSE)
+# With custom dictionary
+texts <- c("this is science",
+           "science is #fascinatingthing",
+           "this is a scientific approach",
+           "science is everywhere",
+           "the beauty of science")
+udict <- unigram_dictionary(texts)
+unigram_sequence_segmentation('thisisscience', udict)
+
+# With built-in dictionary (English, only lowercase)
+unigram_sequence_segmentation('thisisscience')
+unigram_sequence_segmentation('thisisscience2024')
+unigram_sequence_segmentation('thisisscience2024', simplify=FALSE, omit_zero=FALSE)
 
 }

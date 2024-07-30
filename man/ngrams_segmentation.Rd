@@ -2,14 +2,11 @@
 % Please edit documentation in R/ngrams_segmentation.R
 \name{ngrams_segmentation}
 \alias{ngrams_segmentation}
-\title{Segmenting hashtag with n-grams.}
+\title{Segmenting sequences with n-grams.}
 \usage{
 ngrams_segmentation(
   sequences,
-  texts,
-  clean = TRUE,
-  ngram_min = 1,
-  ngram_max = 5,
+  ngrams_dictionary,
   retrieve = "most-scored",
   simplify = TRUE,
   omit_zero = TRUE,
@@ -17,60 +14,57 @@ ngrams_segmentation(
 )
 }
 \arguments{
-\item{sequences}{character vector, sequence to be segmented, either with '#' (e.g., hashtag)
-or without it.}
+\item{sequences}{character vector, sequence to be segmented
+(e.g., hashtag) or without it.}
 
-\item{texts}{data.frame, containing ids, words to search, words to use
-for segmentation, and their points. See details.}
+\item{ngrams_dictionary}{data.frame, containing ids, words to search, words
+to use for segmentation, and their points. See details.}
 
-\item{clean}{character vector of length 1, the type of the result
-data.frame to be returned:
-'all', 'first-shortest', 'most-pointed' or 'most-scored'.
-See value section.}
+\item{retrieve}{character vector of length 1, with formula
+to calculate score.}
 
-\item{ngram_min}{logical, if adjacent numbers should be merged into one,
+\item{simplify}{logical, if adjacent numbers should be merged into one,
 and underscores removed. See simplification section.}
 
-\item{ngram_max}{logical, if words with 0 points should be omitted
+\item{omit_zero}{logical, if words with 0 points should be omitted
 from word count. See simplification section.}
 
-\item{collapse_ciphers}{character vector of length 1, with formula
+\item{score_formula}{character vector of length 1, with formula
 to calculate score.}
 }
 \value{
 The output always will be data.frame. If \code{retrieve='all'}
 is used, then the return will include all possible segmentation
-of the given hashtag.\cr
+of the given sequence.\cr
 If \code{retrieve='first-shortest'} is used, the first of the shortest
 segmentations (with respect to the order of word's appearance
 in the dictionary, 1 row).\cr
 If \code{retrieve='most-pointed'} is used, segmentation with most total
 points is returned (1 row).\cr
 If \code{retrieve='most-scored'} is used, segmentation with the highest
-score calculated as \cr \eqn{score = points / words.number ^ 2}
+score calculated as
+\cr \eqn{score = points / words.number ^ 2} (or as specified by the user).
+\cr \strong{The output is not in the input order. If needed, use
+\link[base]{lapply}}
 }
 \description{
-\code{unigram_sequence_segmentation} returns the data.frame containing hashtag,
-its segmented version, ids of dictionary words,
-number of words it have taken to segment the hashtag,
-total number of points, and computed score.
+\code{ngrams_segmentation} segments input sequence into possible segmented
+text based on n-grams segmentation approach.
 }
-\details{
-This function is not intendend for long strings segmentation -
-140 characters should be considered too long
-and may take hours to complete. 15 characters takes about 0.02s,
-30 characters about 0.03s.
-}
-\section{Dictionary}{
+\section{ngrams_dictionary}{
 
-Dictionary has to be data.frame with three named columns: 1) word, 2) id,
-3) points.\cr
-"word" should be column of type character, containing unigram. Word case
-might be used.\cr
-"id" should be column of type numeric, containing id of unigram.\cr
-"points" should be column of type numeric, containing number of points
+Dictionary has to be data.frame with four named columns: 1) to_search,
+2) to_replace, 3) id, 4) points.\cr
+'to_search' should be column of type character, containing n-grams to
+look for. Word case might be used.\cr
+'to_replace' should be column of type character, containing n-grams that
+should be used for creating segmentation vector, if 'to_search' matches
+text. \cr
+'id' should be column of type numeric, containing id of unigram.\cr
+'points' should be column of type numeric, containing number of points
 for the word - the higher, the better. Unigrams with 0 points might be
-removed from the wordcount with omit.simplified argument.
+removed from the wordcount with omit_zero argument. ngrams_dictionary
+might be created with \link{ngrams_dictionary}.
 }
 
 \section{Simplification}{
@@ -80,17 +74,25 @@ Two arguments are possible for simplification:\cr
 \item simplify - removes spaces between numbers and removes underscores,\cr
 \item omit_zero - removes ids of 0-pointed unigrams,
 and omits them in the word count.\cr
-By deafult segmented hashtag will be simplified,
+By deafult segmented sequence will be simplified,
 and numbers and underscores will be removed from word count
 for score computing, since they are neutral as they are necessary.
 }
 }
 
 \examples{
-  unigram_sequence_segmentation('#thisisscience')
-  unigram_sequence_segmentation('#this_is_science')
-  unigram_sequence_segmentation('#thisisscience2020')
-  unigram_sequence_segmentation('#thisisscience2020', simplify=FALSE,
-  omit_zero=FALSE)
+texts <- c("this is science",
+           "science is #fascinatingthing",
+           "this is a scientific approach",
+           "science is everywhere",
+           "the beauty of science")
+ndict <- ngrams_dictionary(texts)
+ngrams_segmentation("thisisscience", ndict)
+ngrams_segmentation("this_is_science", ndict)
+ngrams_segmentation("ThisIsScience", ndict)
+ngrams_segmentation("thisisscience",
+                    ndict,
+                    simplify=FALSE,
+                    omit_zero=FALSE)
 
 }

@@ -1,13 +1,12 @@
 Package: NUSS
 Title: Mixed N-grams and Unigram Sequence Segmentation (NUSS)
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Oskar", "Kosch", , "contact@oskarkosch.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0003-2697-1393"))
 Description: This package segments short texts - like hashtags -
-    into the separated words sequence. It does so with the use of dictionary,
-    and may utilize custom words. Since hashtags might be single words,
-    unigram approach is employed.
+    into the separated words sequence, and does so with the use of dictionary,
+    which may be built on custom corpus of texts.
 License: GPL (>= 3)
 Encoding: UTF-8
 Language: en

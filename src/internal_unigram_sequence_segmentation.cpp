@@ -84,11 +84,7 @@ List internal_unigram_sequence_segmentation(std::vector<std::string> sequences, 
     for(unsigned int i = 0; i < sequences.size(); ++i) {
         std::string sequence = sequences[i];
         std::string no_sequence;
-        if(boost::starts_with(sequence, "#")) {
-            no_sequence = sequence.substr(1);
-        } else {
-            no_sequence = sequence;
-        }
+        no_sequence = sequence;
 
         LogicalVector sub = igrepl(to_search, sequence, true);
 

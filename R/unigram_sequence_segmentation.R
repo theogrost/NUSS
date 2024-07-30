@@ -1,28 +1,27 @@
-#' Segmenting hashtag with unigrams
+#' Segmenting sequences with unigrams
 #'
-#' \code{unigram_sequence_segmentation} returns the data.frame containing hashtag,
-#'   its segmented version, ids of dictionary words,
-#'   number of words it have taken to segment the hashtag,
-#'   total number of points, and computed score.
+#' \code{unigram_sequence_segmentation} segments input sequence into possible segmented
+#' text based on unigram sequence segmentation approach.
 #'
 #' This function is not intendend for long strings segmentation -
-#'   140 characters should be considered too long
+#'   70 characters should be considered too long
 #'   and may take hours to complete. 15 characters takes about 0.02s,
 #'   30 characters about 0.03s.
 #'
-#' @param sequences character vector, sequence to be segmented, either with '#' (e.g., hashtag)
-#'   or without it.
-#' @param dictionary data.frame, containing ids, words to search, words to use for segmentation, and their points. See details.
-#' @param retrieve character vector of length 1, the type of the result data.frame to be returned:
-#'   'all', 'first-shortest', 'most-pointed' or 'most-scored'.
-#'   See value section.
+#' @param sequences character vector, sequence to be segmented
+#' (e.g., hashtag). Case-sensitive.
+#' @param dictionary data.frame, containing ids, words to search, words to use
+#' for segmentation, and their points. See details.
+#' @param retrieve character vector of length 1, the type of the result
+#' data.frame to be returned: 'all', 'first-shortest', 'most-pointed' or
+#' 'most-scored'. See value section.
 #' @param simplify logical, if adjacent numbers should be merged into one,
 #'   and underscores removed. See simplification section.
 #' @param omit_zero logical, if words with 0 points should be omitted
 #'   from word count. See simplification section.
 #' @param score_formula character vector of length 1, with formula
 #'   to calculate score.
-#' @section Dictionary:
+#' @section unigram_dictionary:
 #' Dictionary has to be data.frame with four named columns: 1) to_search,
 #' 2) to_replace, 3) id, 4) points.\cr
 #'   'to_search' should be column of type character, containing unigram to
@@ -39,25 +38,37 @@
 #'   * simplify - removes spaces between numbers and removes underscores,\cr
 #'   * omit_zero - removes ids of 0-pointed unigrams,
 #'   and omits them in the word count.\cr
-#'   By deafult segmented hashtag will be simplified,
+#'   By deafult segmented sequence will be simplified,
 #'   and numbers and underscores will be removed from word count
 #'   for score computing, since they are neutral as they are necessary.
 #' @return The output always will be data.frame. If \code{retrieve='all'}
 #'   is used, then the return will include all possible segmentation
-#'   of the given hashtag.\cr
+#'   of the given sequence.\cr
 #'   If \code{retrieve='first-shortest'} is used, the first of the shortest
 #'   segmentations (with respect to the order of word's appearance
 #'   in the dictionary, 1 row).\cr
 #'   If \code{retrieve='most-pointed'} is used, segmentation with most total
 #'   points is returned (1 row).\cr
-#'   If \code{retrieve='most-scored'} is used, segmentation with the highest score
-#'   calculated as
+#'   If \code{retrieve='most-scored'} is used, segmentation with the highest
+#'   score calculated as
 #'   \cr \eqn{score = points / words.number ^ 2} (or as specified by the user).
+#'   \cr **The output is not in the input order. If needed, use
+#'   \link[base]{lapply}**
+#'
 #' @examples
-#'   unigram_sequence_segmentation('#thisisscience')
-#'   unigram_sequence_segmentation('#this_is_science')
-#'   unigram_sequence_segmentation('#thisisscience2020')
-#'   unigram_sequence_segmentation('#thisisscience2020', simplify=FALSE, omit_zero=FALSE)
+#' # With custom dictionary
+#' texts <- c("this is science",
+#'            "science is #fascinatingthing",
+#'            "this is a scientific approach",
+#'            "science is everywhere",
+#'            "the beauty of science")
+#' udict <- unigram_dictionary(texts)
+#' unigram_sequence_segmentation('thisisscience', udict)
+#'
+#' # With built-in dictionary (English, only lowercase)
+#' unigram_sequence_segmentation('thisisscience')
+#' unigram_sequence_segmentation('thisisscience2024')
+#' unigram_sequence_segmentation('thisisscience2024', simplify=FALSE, omit_zero=FALSE)
 #'
 #' @importFrom magrittr "%>%"
 #' @export
@@ -68,7 +79,7 @@ unigram_sequence_segmentation <- function(
     simplify = TRUE,
     omit_zero = TRUE,
     score_formula = "points / words.number ^ 2") {
-  sequences_list <- internal_unigram_sequence_segmentation(
+  result <- internal_unigram_sequence_segmentation(
     sequences,
     dictionary$to_search,
     dictionary$to_replace,
@@ -76,38 +87,44 @@ unigram_sequence_segmentation <- function(
     dictionary$points,
     omit_zero
     )
-  sequences_df <- sequences_list_as_df(sequences_list)
-  if (nrow(sequences_df) > 0) {
-    sequences_df$score <- with(sequences_df,
-                               eval(parse(text = score_formula)))
+  result <- sequences_list_as_df(result)
+  if (nrow(result) > 0) {
+    result$score <- with(result, eval(parse(text = score_formula)))
   }
   if (simplify) {
-    sequences_df$segmented <- gsub("(?<=\\d) (?=\\d)",
-                                   "",
-                                   sequences_df$segmented,
-                                   perl = TRUE)
-    sequences_df$segmented <- gsub(" _ ",
-                                   " ",
-                                   sequences_df$segmented,
-                                   fixed = TRUE)
+    result$segmented <- gsub("(?<=\\d) (?=\\d)",
+                             "",
+                             result$segmented,
+                             perl = TRUE)
+    result$segmented <- gsub(" _ ",
+                             " ",
+                             result$segmented,
+                             fixed = TRUE)
   }
 
-  sequences_df <- dplyr::mutate(dplyr::group_by(sequences_df, sequence),
-                                to.second = .data$score / sort(.data$score,
-                                                               TRUE)[2])
+  result <- result %>%
+    dplyr::group_by(.data$sequence) %>%
+    dplyr::mutate(to.second = .data$score / sort(.data$score, TRUE)[2]) %>%
+    dplyr::ungroup()
 
-  sequences_df <- switch(
+  result <- switch(
     retrieve,
-    "all" = sequences_df,
-    "first-shortest" = dplyr::slice(dplyr::group_by(sequences_df,
-                                                    .data$sequence),
-                                    which.min(.data$words.number)),
-    "most-pointed" = dplyr::slice(dplyr::group_by(sequences_df, .data$sequence),
-                                  which.max(.data$points)),
-    "most-scored" = dplyr::slice(dplyr::group_by(sequences_df, .data$sequence),
-                                 which.max(.data$score))
+    "all" = result,
+    "first-shortest" = result %>%
+      dplyr::group_by(.data$sequence) %>%
+      dplyr::slice(which.min(.data$words.number)) %>%
+      dplyr::ungroup(),
+    "most-pointed" = result %>%
+      dplyr::group_by(.data$sequence) %>%
+      dplyr::slice(which.max(.data$points)) %>%
+      dplyr::ungroup(),
+    "most-scored" = result %>%
+      dplyr::group_by(.data$sequence) %>%
+      dplyr::slice(which.max(.data$score)) %>%
+      dplyr::ungroup()
   )
 
-  sequences_df <- as.data.frame(sequences_df)
-  return(sequences_df)
+  result <- as.data.frame(result)
+
+  return(result)
 }
