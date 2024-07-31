@@ -73,4 +73,4 @@ NUSS is licensed under the GPL-3.0 License.
 
 For any questions or issues, please open an issue on GitHub or contact the maintainer.
 
-We hope you find NUSS useful for your text processing tasks!
+I hope you find NUSS useful for your text processing tasks!
