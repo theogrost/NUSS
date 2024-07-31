@@ -6,7 +6,7 @@
 \usage{
 unigram_sequence_segmentation(
   sequences,
-  dictionary = NUSS::base_dictionary,
+  unigram_dictionary = NUSS::base_dictionary,
   retrieve = "most-scored",
   simplify = TRUE,
   omit_zero = TRUE,
@@ -17,7 +17,7 @@ unigram_sequence_segmentation(
 \item{sequences}{character vector, sequence to be segmented
 (e.g., hashtag). Case-sensitive.}
 
-\item{dictionary}{data.frame, containing ids, words to search, words to use
+\item{unigram_dictionary}{data.frame, containing ids, words to search, words to use
 for segmentation, and their points. See details.}
 
 \item{retrieve}{character vector of length 1, the type of the result

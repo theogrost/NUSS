@@ -17,7 +17,7 @@ ngrams_segmentation(
 \item{sequences}{character vector, sequence to be segmented
 (e.g., hashtag) or without it.}
 
-\item{ngrams_dictionary}{data.frame, containing ids, words to search, words
+\item{ngrams_dictionary}{data.frame, containing ids, n-grams to search, words
 to use for segmentation, and their points. See details.}
 
 \item{retrieve}{character vector of length 1, with formula

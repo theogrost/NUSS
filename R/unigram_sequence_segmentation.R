@@ -10,7 +10,7 @@
 #'
 #' @param sequences character vector, sequence to be segmented
 #' (e.g., hashtag). Case-sensitive.
-#' @param dictionary data.frame, containing ids, words to search, words to use
+#' @param unigram_dictionary data.frame, containing ids, words to search, words to use
 #' for segmentation, and their points. See details.
 #' @param retrieve character vector of length 1, the type of the result
 #' data.frame to be returned: 'all', 'first-shortest', 'most-pointed' or
@@ -74,17 +74,17 @@
 #' @export
 unigram_sequence_segmentation <- function(
     sequences,
-    dictionary = NUSS::base_dictionary,
+    unigram_dictionary = NUSS::base_dictionary,
     retrieve = "most-scored",
     simplify = TRUE,
     omit_zero = TRUE,
     score_formula = "points / words.number ^ 2") {
   result <- internal_unigram_sequence_segmentation(
     sequences,
-    dictionary$to_search,
-    dictionary$to_replace,
-    dictionary$id,
-    dictionary$points,
+    unigram_dictionary$to_search,
+    unigram_dictionary$to_replace,
+    unigram_dictionary$id,
+    unigram_dictionary$points,
     omit_zero
     )
   result <- sequences_list_as_df(result)

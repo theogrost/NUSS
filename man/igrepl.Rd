@@ -20,7 +20,9 @@ was found.
 \description{
 This function takes character vector \code{patterns} with regex patterns
 (or fixed strings),
-and searches for match in the \code{x} string
+and searches for match in the \code{x} string. It is inverse in the meaning,
+that in \link[base]{grepl} single pattern is used against multiple strings;
+instead, this function takes multiple patterns to fit on a single string.
 }
 \examples{
 igrepl(c("today","b.* fox", "jumps over", "vigorous"),

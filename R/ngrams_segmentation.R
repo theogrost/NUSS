@@ -5,7 +5,7 @@
 #'
 #' @param sequences character vector, sequence to be segmented
 #' (e.g., hashtag) or without it.
-#' @param ngrams_dictionary data.frame, containing ids, words to search, words
+#' @param ngrams_dictionary data.frame, containing ids, n-grams to search, words
 #' to use for segmentation, and their points. See details.
 #' @param retrieve character vector of length 1, with formula
 #'   to calculate score.
